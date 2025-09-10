@@ -10,6 +10,7 @@ import SwiftUI
 struct PokemonRow: View {
     var body: some View {
         let screenSize = UIScreen.main.bounds.size
+        
         ZStack {
             Rectangle()
                 .cornerRadius(25)
@@ -32,12 +33,12 @@ struct PokemonRow: View {
                 ZStack {
                     Rectangle()
                         .cornerRadius(25)
-                        .frame(width: screenSize.height * 0.15, height: screenSize.height * 0.15)
+                        .frame(width: screenSize.width * 0.30, height: screenSize.height * 0.13)
                         .foregroundColor(.secondary)
                 }
             }
         }
-        .frame(width: screenSize.width * 0.95, height: screenSize.height * 0.15)
+        .frame(width: screenSize.width * 0.95, height: screenSize.height * 0.13)
     }
 }
 
