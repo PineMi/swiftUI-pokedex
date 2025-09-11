@@ -20,37 +20,39 @@ struct PokemonRow: View {
                 .cornerRadius(25)
                 .foregroundColor(.cardBackground)
             if let pokemon = pokemon {
-                HStack {
-                    // Text
-                    VStack(alignment: .leading) {
-                        Text("Nº \(pokemon.id)").font(.headline)
-                        Text(pokemon.name.capitalized)
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                        HStack {
-                            ForEach (pokemon.types) { type in
-                                Text(type.type.name.capitalized)
-                                    .font(.caption)
-    
+                NavigationLink(destination: PokemonDetails(pokemonId: pokemon.id)){
+                    HStack {
+                        // Text
+                        VStack(alignment: .leading) {
+                            Text("Nº \(pokemon.id)").font(.headline)
+                            Text(pokemon.name.capitalized)
+                                .font(.largeTitle)
+                                .fontWeight(.bold)
+                            HStack {
+                                ForEach (pokemon.types) { type in
+                                    Text(type.type.name.capitalized)
+                                        .font(.caption)
+                                    
+                                }
                             }
                         }
-                    }
-                    .padding(.leading)
-                    Spacer()
-                    // Pokemon Image Square
-                    ZStack {
-                        Rectangle()
-                            .cornerRadius(25)
-                            .frame(width: screenSize.width * 0.30, height: screenSize.height * 0.13)
-                            .foregroundColor(.secondary)
-                        AsyncImage(url: URL(string: pokemon.sprites.frontDefault)) { image in
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
+                        .padding(.leading)
+                        Spacer()
+                        // Pokemon Image Square
+                        ZStack {
+                            Rectangle()
+                                .cornerRadius(25)
                                 .frame(width: screenSize.width * 0.30, height: screenSize.height * 0.13)
-                        } placeholder: { ProgressView() }
+                                .foregroundColor(.secondary)
+                            AsyncImage(url: URL(string: pokemon.sprites.frontDefault)) { image in
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: screenSize.width * 0.30, height: screenSize.height * 0.13)
+                            } placeholder: { ProgressView() }
+                        }
                     }
-                }
+                }.buttonStyle(.plain)
             } else {
                 ProgressView()
             }

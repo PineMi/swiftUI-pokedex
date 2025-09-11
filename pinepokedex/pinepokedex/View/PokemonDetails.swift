@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PokemonDetailView: View {
+struct PokemonDetails: View {
 
     let pokemonId: Int
     
@@ -49,5 +49,5 @@ struct PokemonDetailView: View {
 }
 
 #Preview {
-    PokemonDetailView(pokemonId: 4)
+    PokemonDetails(pokemonId: 4)
 }

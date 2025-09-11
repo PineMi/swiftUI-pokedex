@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import SwiftData
 
 // main Pokemon model
+
 struct Pokemon: Codable, Identifiable {
     let id: Int
     let name: String
