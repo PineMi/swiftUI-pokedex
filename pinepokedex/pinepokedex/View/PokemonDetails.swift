@@ -5,7 +5,6 @@
 //  Created by Miguel Piñeiro on 10/09/25.
 //
 
-// This would be your SwiftUI view file
 import SwiftUI
 
 struct PokemonDetailView: View {
@@ -32,7 +31,9 @@ struct PokemonDetailView: View {
                 
                 Text("Height: \(pokemon.height)")
                 Text("Weight: \(pokemon.weight)")
-
+                ForEach(0..<6) { index in
+                    Text("\(pokemon.stats[index].stat.name): \(pokemon.stats[index].baseStat)")
+                }
             } else {
                 ProgressView()
                 Text("Fetching Pokémon...")

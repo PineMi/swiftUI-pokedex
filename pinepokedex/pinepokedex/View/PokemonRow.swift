@@ -8,40 +8,63 @@
 import SwiftUI
 
 struct PokemonRow: View {
+    let id: Int
+    @State private var pokemon: Pokemon?
+    
     var body: some View {
+        
         let screenSize = UIScreen.main.bounds.size
         
         ZStack {
             Rectangle()
                 .cornerRadius(25)
                 .foregroundColor(.cardBackground)
-            
-            HStack {
-                // Text
-                VStack(alignment: .leading) {
-                    Text("Nº 001").font(.headline)
-                    Text("Bulbasaur").font(.title)
-                    Text("Type")
+            if let pokemon = pokemon {
+                HStack {
+                    // Text
+                    VStack(alignment: .leading) {
+                        Text("Nº \(pokemon.id)").font(.headline)
+                        Text(pokemon.name.capitalized)
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                        HStack {
+                            ForEach (pokemon.types) { type in
+                                Text(type.type.name.capitalized)
+                                    .font(.caption)
+    
+                            }
+                        }
+                    }
+                    .padding(.leading)
+                    Spacer()
+                    // Pokemon Image Square
+                    ZStack {
+                        Rectangle()
+                            .cornerRadius(25)
+                            .frame(width: screenSize.width * 0.30, height: screenSize.height * 0.13)
+                            .foregroundColor(.secondary)
+                        AsyncImage(url: URL(string: pokemon.sprites.frontDefault)) { image in
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: screenSize.width * 0.30, height: screenSize.height * 0.13)
+                        } placeholder: { ProgressView() }
+                    }
                 }
-                .padding(.leading)
-                
-                
-                Spacer()
-                
-                // Pokemon Image Square
-                
-                ZStack {
-                    Rectangle()
-                        .cornerRadius(25)
-                        .frame(width: screenSize.width * 0.30, height: screenSize.height * 0.13)
-                        .foregroundColor(.secondary)
-                }
+            } else {
+                ProgressView()
+            }
+        }
+        .onAppear {
+            fetchPokemon(id: id) { fetchedPokemon in
+                self.pokemon = fetchedPokemon
             }
         }
         .frame(width: screenSize.width * 0.95, height: screenSize.height * 0.13)
+        
     }
 }
 
 #Preview {
-    PokemonRow()
+    PokemonRow(id:1)
 }

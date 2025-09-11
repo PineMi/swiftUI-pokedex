@@ -28,9 +28,12 @@ struct Pokemon: Codable, Identifiable {
     }
 }
 
-struct TypeElement: Codable {
+struct TypeElement: Codable, Identifiable {
     let slot: Int
     let type: TypeInfo
+    
+    var id: Int { slot } // Provisório
+
 }
 
 struct TypeInfo: Codable {
@@ -41,7 +44,7 @@ struct TypeInfo: Codable {
 
 struct Sprites: Codable {
     let frontDefault: String
-    let other: OtherSprites? // Future nesting
+    let other: OtherSprites? // Nesting Futuro
 
     enum CodingKeys: String, CodingKey {
         case frontDefault = "front_default"

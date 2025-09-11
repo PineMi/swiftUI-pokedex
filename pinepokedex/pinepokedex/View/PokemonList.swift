@@ -8,25 +8,25 @@
 import SwiftUI
 
 struct PokemonList: View {
-    @State private var pokemonList: [Pokemon] = []
+    @State private var loadedPage: Int? = nil
     
     var body: some View {
         NavigationSplitView {
-            if pokemonList.isEmpty {
-                ProgressView()
-            }
-            else {
-                List {
-                    PokemonRow()
+            ScrollView {
+                if let _ = loadedPage {
+                    LazyVStack{
+                        ForEach(1..<50) { index in
+                            PokemonRow(id:index)
+                        }
+                    }
                 }
-                .navigationTitle("Pokémons")
+                else {
+                    ProgressView()
+                }
             }
-        } detail: {
-            Text("Select a Pokémon")
         }
-        .onAppear {
-        }
-        
+        detail: { Text("Select a Pokémon") }
+        .onAppear { loadedPage = 1 }
     }
 }
 
