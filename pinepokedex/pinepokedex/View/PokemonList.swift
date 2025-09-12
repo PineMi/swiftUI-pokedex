@@ -8,27 +8,41 @@
 import SwiftUI
 
 struct PokemonList: View {
-    @State private var loadedPage: Int? = nil
+    @State private var pokemons: [Pokemon] = []
+    private let service = PokemonService()
     
     var body: some View {
         NavigationSplitView {
-            ScrollView {
-                if let _ = loadedPage {
-                    LazyVStack{
-                        ForEach(1..<50) { index in
-                            PokemonRow(id:index)
-                        }
-                    }
-                }
-                else {
-                    ProgressView()
+            List(pokemons) { pokemon in
+                PokemonRow(pokemon: pokemon)
+                    // Hide the default list row separators for a custom card look.
+                    .listRowSeparator(.hidden)
+            }
+            // Show a progress view as an overlay while the list is empty.
+            .overlay {
+                if pokemons.isEmpty {
+                    ProgressView("Catching Pokémon...")
                 }
             }
+            .listStyle(.plain)
+            .navigationTitle("Pokédex")
+            // Use .task for modern async calls.
+            .task {
+                // Ensure we only fetch data once.
+                if pokemons.isEmpty {
+                    do {
+                        pokemons = try await service.fetchPokemonList(limit: 151) // Fetch Gen 1
+                    } catch {
+                        print("Error fetching Pokémon: \(error)")
+                    }
+                }
+            }
+        } detail: {
+            Text("Select a Pokémon")
         }
-        detail: { Text("Select a Pokémon") }
-        .onAppear { loadedPage = 1 }
     }
 }
+
 
 #Preview {
     PokemonList()

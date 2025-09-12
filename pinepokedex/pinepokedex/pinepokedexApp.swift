@@ -12,7 +12,7 @@ import SwiftData
 struct pinepokedexApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            PokemonList()
         }
     }
 }

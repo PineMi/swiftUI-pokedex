@@ -1,41 +1,37 @@
-//
-//  FetchPokemonList.swift
-//  pinepokedex
-//
-//  Created by Miguel Piñeiro on 10/09/25.
-//
-
 import Foundation
 
-
-func fetchPokemon(id: Int, completion: @escaping (Pokemon?) -> Void) {
-    
-    guard let url = URL(string: "https://pokeapi.co/api/v2/pokemon/\(id)/") else {
-        print("Invalid URL")
-        completion(nil)
-        return
+struct PokemonService {
+    func fetchPokemon(id: Int) async throws -> Pokemon {
+        guard let url = URL(string: "https://pokeapi.co/api/v2/pokemon/\(id)/") else {
+            throw URLError(.badURL)
+        }
+        
+        let (data, response) = try await URLSession.shared.data(from: url)
+        
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw URLError(.badServerResponse)
+        }
+        
+        let pokemon = try JSONDecoder().decode(Pokemon.self, from: data)
+        return pokemon
     }
     
-    let task = URLSession.shared.dataTask(with: url) { data, response, error in
-        if let data = data {
-            let decoder = JSONDecoder()
-            if let pokemon = try? decoder.decode(Pokemon.self, from: data) {
-                DispatchQueue.main.async {
-                    completion(pokemon)
-                }
-            } else {
-                print("Failed to decode JSON.")
-                DispatchQueue.main.async {
-                    completion(nil)
+    
+    func fetchPokemonList(limit: Int) async throws -> [Pokemon] {
+        var pokemons: [Pokemon] = []
+        
+        try await withThrowingTaskGroup(of: Pokemon.self) { group in
+            for id in 1...limit {
+                group.addTask {
+                    return try await fetchPokemon(id: id)
                 }
             }
-        } else if let error = error {
-            print("Network request failed: \(error)")
-            DispatchQueue.main.async {
-                completion(nil)
+            
+            for try await pokemon in group {
+                pokemons.append(pokemon)
             }
         }
+        
+        return pokemons.sorted { $0.id < $1.id }
     }
-    
-    task.resume()
 }

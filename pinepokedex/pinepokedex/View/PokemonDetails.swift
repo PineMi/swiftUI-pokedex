@@ -9,9 +9,8 @@ import SwiftUI
 
 struct PokemonDetails: View {
 
-    let pokemonId: Int
     
-    @State private var pokemon: Pokemon?
+    let pokemon: Pokemon?
 
     var body: some View {
         VStack {
@@ -40,14 +39,6 @@ struct PokemonDetails: View {
                     .padding(.top, 8)
             }
         }
-        .onAppear {
-            fetchPokemon(id: pokemonId) { fetchedPokemon in
-                self.pokemon = fetchedPokemon
-            }
-        }
     }
 }
 
-#Preview {
-    PokemonDetails(pokemonId: 4)
-}
