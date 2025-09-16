@@ -9,11 +9,10 @@ struct Pokemon: Codable, Identifiable {
     let height: Int // In decimetres
     let stats: [StatElement]
     
-    var weightInKg: Double { Double(weight) / 10.0 } // e.g., 6.9
-    var heightInMeters: Double { Double(height) / 10.0 } // e.g., 0.7
+    var weightInKg: Double { Double(weight) / 10.0 }
+    var heightInMeters: Double { Double(height) / 10.0 }
 
     
-    // Custom decoder to handle the nested 'types' array
     init(from decoder: Decoder) throws {
 
         struct TypeElement: Codable {

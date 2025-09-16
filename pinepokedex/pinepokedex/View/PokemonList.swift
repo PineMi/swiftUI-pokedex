@@ -13,12 +13,31 @@ struct PokemonList: View {
     
     var body: some View {
         NavigationSplitView {
-            List(pokemons) { pokemon in
-                PokemonRow(pokemon: pokemon)
-                    // Hide the default list row separators for a custom card look.
-                    .listRowSeparator(.hidden)
-            }
-            // Show a progress view as an overlay while the list is empty.
+            List {
+                 ForEach(pokemons) { pokemon in
+                     PokemonRow(pokemon: pokemon)
+                         .background(
+                             NavigationLink(destination: PokemonDetails(pokemon: pokemon)){}
+                             .opacity(0)
+                         )
+                     
+                     .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                         Button {
+                             print("\(pokemon.name) favorited!")
+                         } label: {
+                             Label("Favorite", systemImage: "star.fill")
+                         }
+                         .tint(.yellow)
+                     }
+                     .padding(.trailing, 20)
+                     .listRowInsets(EdgeInsets())
+                     .listRowSeparator(.hidden)
+                     .listRowBackground(Color.clear)
+                 }
+             }
+
+             .listRowSpacing(8)
+             .ignoresSafeArea(.all, edges: .leading)
             .overlay {
                 if pokemons.isEmpty {
                     ProgressView("Catching Pokémon...")
@@ -26,12 +45,10 @@ struct PokemonList: View {
             }
             .listStyle(.plain)
             .navigationTitle("Pokédex")
-            // Use .task for modern async calls.
             .task {
-                // Ensure we only fetch data once.
                 if pokemons.isEmpty {
                     do {
-                        pokemons = try await service.fetchPokemonList(limit: 151) // Fetch Gen 1
+                        pokemons = try await service.fetchPokemonList(limit: 151)
                     } catch {
                         print("Error fetching Pokémon: \(error)")
                     }

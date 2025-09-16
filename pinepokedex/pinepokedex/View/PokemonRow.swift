@@ -26,7 +26,6 @@ struct PokemonRow: View {
     let pokemon: Pokemon
     
     var body: some View {
-        NavigationLink(destination: PokemonDetails(pokemon: pokemon)) {
             HStack(spacing: 20) {
                 VStack(alignment: .leading, spacing: 8) {
                     Text(String(format: "#%03d", pokemon.id))
@@ -44,7 +43,7 @@ struct PokemonRow: View {
                         }
                     }
                 }
-                
+                .padding(20)
                 Spacer()
                 
                 AsyncImage(url: URL(string: pokemon.sprites.frontDefault)) { image in
@@ -54,32 +53,24 @@ struct PokemonRow: View {
                 } placeholder: {
                     ProgressView()
                 }
-                .frame(width: 100, height: 100)
+                .frame(width: 120, height: 120)
                 .background(Color.black.opacity(0.1))
                 .cornerRadius(20)
+                .padding(.trailing, 10)
             }
-            .padding()
-            .background(Color(.systemGray6))
-            .cornerRadius(20)
-        }
-        .buttonStyle(.plain)
+            .background(
+                          Color(.systemGray6),
+                          in: UnevenRoundedRectangle(
+                              topLeadingRadius: 0,
+                              bottomLeadingRadius: 0,
+                              bottomTrailingRadius: 20,
+                              topTrailingRadius: 20
+                          )
+                      )
     }
 }
 
 #Preview("Single Row") {
     PokemonRow(pokemon: MockData.samplePokemon)
         .padding()
-}
-
-#Preview("In a List") {
-    List {
-        PokemonRow(pokemon: MockData.samplePokemon)
-        PokemonRow(pokemon: MockData.samplePokemon)
-        PokemonRow(pokemon: MockData.samplePokemon)
-        PokemonRow(pokemon: MockData.samplePokemon)
-        PokemonRow(pokemon: MockData.samplePokemon)
-        PokemonRow(pokemon: MockData.samplePokemon)
-        PokemonRow(pokemon: MockData.samplePokemon)
-    }
-    .listStyle(.plain)
 }
