@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+ 
 struct PokemonList: View {
     @State private var pokemons: [Pokemon] = []
     private let service = PokemonService()

@@ -11,6 +11,8 @@ struct MockData {
     
     static let samplePokemon: Pokemon = uniquePokemonList[0]
     
+    static let sampleCompletePokemon: Pokemon = load("bulbasaurCompleteData.json")
+    
     static let pokemonList: [Pokemon] = {
         return (0..<7).flatMap { _ in uniquePokemonList }
     }()
@@ -18,6 +20,30 @@ struct MockData {
     private static let uniquePokemonList: [Pokemon] = {
         return try! JSONDecoder().decode([Pokemon].self, from: samplePokemonArrayData)
     }()
+    
+    private static func load<T: Decodable>(_ path: String) -> T {
+        let data: Data
+        
+        // 1. Parse the path to get the filename and directory.
+        let nsPath = path as NSString
+        let filename = nsPath.lastPathComponent
+        let directory = nsPath.deletingLastPathComponent
+        
+        // 2. Find the file's URL using the parsed components.
+        guard let fileUrl = Bundle.main.url(forResource: filename, withExtension: nil, subdirectory: directory) else {
+            fatalError("Couldn't find \(path) in the main bundle.")
+        }
+
+        // 3. Load and decode the data (this part is unchanged).
+        do {
+            let data = try Data(contentsOf: fileUrl)
+            let decoder = JSONDecoder()
+            return try decoder.decode(T.self, from: data)
+        } catch {
+            fatalError("Failed to load or parse \(path) from bundle:\n\(error)")
+        }
+    }
+    
     
     private static let samplePokemonArrayData = """
     [
@@ -60,3 +86,4 @@ struct MockData {
     ]
     """.data(using: .utf8)!
 }
+

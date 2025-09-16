@@ -116,7 +116,7 @@ struct PokemonDetails: View {
 }
 
 
-// --- Reusable Helper Views for Cleaner Code ---
+// --- Helper Views ---
 
 struct StatPill: View {
     let label: String
@@ -145,10 +145,13 @@ struct StatRow: View {
                 .fontWeight(.medium)
                 .frame(width: 40)
             
-            // A simple progress bar to visualize the stat
             ProgressView(value: Double(statElement.baseStat), total: 200)
                 .tint(.blue)
         }
     }
 }
 
+#Preview {
+    let samplePokemon = MockData.sampleCompletePokemon
+    PokemonDetails(pokemon: samplePokemon)
+}
