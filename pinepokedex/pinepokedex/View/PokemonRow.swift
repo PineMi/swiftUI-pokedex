@@ -46,7 +46,7 @@ struct PokemonRow: View {
                 .padding(20)
                 Spacer()
                 
-                AsyncImage(url: URL(string: pokemon.sprites.frontDefault)) { image in
+                AsyncImage(url: pokemon.sprites.primary) { image in
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fit)

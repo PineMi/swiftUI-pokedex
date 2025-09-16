@@ -9,11 +9,14 @@ import SwiftUI
 
 struct PokemonDetails: View {
     let pokemon: Pokemon
+    let gridColumns: [GridItem] = [
+            .init(.adaptive(minimum: 80))
+        ]
 
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                AsyncImage(url: URL(string: pokemon.sprites.frontDefault)) { image in
+                AsyncImage(url: pokemon.sprites.primary) { image in
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fit)
@@ -48,7 +51,6 @@ struct PokemonDetails: View {
                         .font(.title2)
                         .fontWeight(.bold)
                     
-                    // 4. Loop over the stats array directly to avoid crashes.
                     ForEach(pokemon.stats, id: \.stat.name) { statElement in
                         StatRow(statElement: statElement)
                     }
@@ -57,6 +59,23 @@ struct PokemonDetails: View {
                 .background(Color(.systemGray6))
                 .cornerRadius(12)
                 
+                // --- Gallery ---
+                Text("Sprite Gallery")
+                    .font(.headline)
+                    .padding(.top)
+                    
+                LazyVGrid(columns: gridColumns, spacing: 12) {
+                    ForEach(pokemon.sprites.gallery, id: \.self) { spriteUrl in
+                        AsyncImage(url: spriteUrl) { image in
+                            image.resizable().aspectRatio(contentMode: .fit)
+                        } placeholder: {
+                            ProgressView()
+                        }
+                        .frame(width: 80, height: 80)
+                        .background(Color(.systemGray5))
+                        .cornerRadius(8)
+                                        }
+                }
             }
             .padding()
         }
