@@ -13,6 +13,8 @@ struct PokemonDetails: View {
             .init(.adaptive(minimum: 80))
         ]
 
+    @State private var zoomedSpriteURL: URL? = nil
+
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
@@ -74,13 +76,42 @@ struct PokemonDetails: View {
                         .frame(width: 80, height: 80)
                         .background(Color(.systemGray5))
                         .cornerRadius(8)
-                                        }
+                        .onLongPressGesture(minimumDuration: 0.5) {
+                        } onPressingChanged: { isPressing in
+                            withAnimation(.spring) {
+                                if isPressing {
+                                    zoomedSpriteURL = spriteUrl
+                                } else {
+                                    zoomedSpriteURL = nil
+                                }
+                            }
+                        }
+                    }
                 }
             }
             .padding()
         }
         .navigationTitle(pokemon.name.capitalized)
         .navigationBarTitleDisplayMode(.inline)
+        
+        .overlay {
+            if let url = zoomedSpriteURL {
+            ZStack {
+                Color.black.opacity(0.7).ignoresSafeArea()
+                AsyncImage(url: url) { image in
+                    image.resizable().aspectRatio(contentMode: .fit)
+                        .transition(.scale.combined(with: .opacity))
+
+                } placeholder: {
+                    ProgressView()
+                }
+                .frame(width: 300, height: 300)
+                .background(.thinMaterial)
+                .cornerRadius(20)
+                .shadow(radius: 10)
+            }
+            }
+        }
     }
 }
 
