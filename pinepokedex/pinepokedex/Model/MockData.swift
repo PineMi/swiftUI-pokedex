@@ -22,19 +22,16 @@ struct MockData {
     }()
     
     private static func load<T: Decodable>(_ path: String) -> T {
-        let data: Data
+        let _: Data
         
-        // 1. Parse the path to get the filename and directory.
         let nsPath = path as NSString
         let filename = nsPath.lastPathComponent
         let directory = nsPath.deletingLastPathComponent
         
-        // 2. Find the file's URL using the parsed components.
         guard let fileUrl = Bundle.main.url(forResource: filename, withExtension: nil, subdirectory: directory) else {
             fatalError("Couldn't find \(path) in the main bundle.")
         }
 
-        // 3. Load and decode the data (this part is unchanged).
         do {
             let data = try Data(contentsOf: fileUrl)
             let decoder = JSONDecoder()

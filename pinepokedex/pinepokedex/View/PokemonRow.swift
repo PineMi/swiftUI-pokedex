@@ -25,6 +25,7 @@ struct TypeTagView: View {
 struct PokemonRow: View {
     let pokemon: Pokemon
     
+    
     var body: some View {
             HStack(spacing: 20) {
                 VStack(alignment: .leading, spacing: 8) {
@@ -46,6 +47,9 @@ struct PokemonRow: View {
                 .padding(20)
                 Spacer()
                 
+                let Gradcolor1 = typeColor(pokemon_type: pokemon.types[0])
+                let Gradcolor2 = pokemon.types.count == 1 ? .white : typeColor(pokemon_type: pokemon.types[1])
+               
                 AsyncImage(url: pokemon.sprites.primary) { image in
                     image
                         .resizable()
@@ -54,7 +58,7 @@ struct PokemonRow: View {
                     ProgressView()
                 }
                 .frame(width: 120, height: 120)
-                .background(Color.black.opacity(0.1))
+                .background(LinearGradient(colors: [Gradcolor1, Gradcolor2], startPoint: .topTrailing, endPoint: .bottomLeading))
                 .cornerRadius(20)
                 .padding(.trailing, 10)
             }

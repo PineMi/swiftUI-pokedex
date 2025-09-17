@@ -135,11 +135,12 @@ struct StatPill: View {
 }
 
 struct StatRow: View {
-    let statElement: StatElement
+    var statElement: StatElement
     
     var body: some View {
         HStack {
-            Text(statElement.stat.name.capitalized)
+            let statName = statElement.stat.name.capitalized.replacingOccurrences(of: "-", with: " ")
+            Text(statName)
                 .frame(width: 80, alignment: .leading)
             Text("\(statElement.baseStat)")
                 .fontWeight(.medium)

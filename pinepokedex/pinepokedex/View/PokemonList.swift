@@ -25,55 +25,54 @@ struct PokemonList: View {
                         type.lowercased().contains(searchText.lowercased())
                     }
                     return nameMatch || idContainsMatch || idExactMatch || typeMatch
-                }
             }
+        }
     }
     
     var body: some View {
         NavigationSplitView {
             List(filteredPokemons) { pokemon in
-                    PokemonRow(pokemon: pokemon)
-                        .background(
-                            NavigationLink(destination: PokemonDetails(pokemon: pokemon)){}
+                PokemonRow(pokemon: pokemon)
+                    .background(
+                        NavigationLink(destination: PokemonDetails(pokemon: pokemon)){}
                             .opacity(0)
-                        )
-                     
-                     .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                         Button {
-                             print("\(pokemon.name) favorited!")
-                         } label: {
-                             Label("Favorite", systemImage: "star.fill")
-                         }
-                         .tint(.yellow)
-                     }
-                     .padding(.trailing, 20)
-                     .listRowInsets(EdgeInsets())
-                     .listRowSeparator(.hidden)
-                     .listRowBackground(Color.clear)
-             }
-
-             .listRowSpacing(8)
-             .ignoresSafeArea(.all, edges: .leading)
-             .overlay {
-                 if pokemons.isEmpty {
-                     ProgressView("Catching Pokémon...")
-                 }
-             }
-             .listStyle(.plain)
-             .navigationTitle("Pokédex")
-             .searchable(text: $searchText, prompt: "Search for a Pokémon, ID or Type")
-             .task {
-                 if pokemons.isEmpty {
-                     do {
-                         pokemons = try await service.fetchPokemonList(limit: 151)
-                     } catch {
-                         print("Error fetching Pokémon: \(error)")
-                     }
-                 }
-             }
+                    )
+                
+                    .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                        Button {
+                            print("\(pokemon.name) favorited!")
+                        } label: {
+                            Label("Favorite", systemImage: "star.fill")
+                        }
+                        .tint(.yellow)
+                    }
+                    .padding(.trailing, 20)
+                    .listRowInsets(EdgeInsets())
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
+            }
+            .listRowSpacing(8)
+            .ignoresSafeArea(.all, edges: .leading)
+            .overlay {
+                if pokemons.isEmpty {
+                    ProgressView()
+                }
+            }
+            .listStyle(.plain)
+            .searchable(text: $searchText, prompt: "Search for a Pokémon or ID")
+            .task {
+                if pokemons.isEmpty {
+                    do {
+                        pokemons = try await service.fetchPokemonList(limit: 151)
+                    } catch {
+                        print("Error fetching Pokémon: \(error)")
+                    }
+                }
+            }
         } detail: {
             Text("Select a Pokémon")
         }
+            
     }
 }
 
