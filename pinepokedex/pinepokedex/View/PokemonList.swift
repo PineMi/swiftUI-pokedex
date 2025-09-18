@@ -61,7 +61,7 @@ struct PokemonList: View {
             .task {
                 if pokemons.isEmpty {
                     do {
-                        pokemons = try await service.fetchPokemonList(limit: 50)
+                        pokemons = try await service.fetchPokemonList(limit: 300)
                     } catch {
                         print("Error fetching Pokémon: \(error)")
                     }

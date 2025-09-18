@@ -22,11 +22,11 @@ struct TypeTagView: View {
             .font(.caption)
             .fontWeight(.bold)
             .foregroundColor(.pokemonNameWhite)
-            .padding(.horizontal, 12)
-            .padding(.vertical, 6)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
             .background(Color(typeColor(pokemon_type: typeName)))
             .cornerRadius(5)
-            .shadow(radius: 5, y: 6)
+            .shadow(radius: 2, y: 2)
     }
 }
 
@@ -36,13 +36,15 @@ struct PokemonRow: View {
     
     
     var body: some View {
+        ZStack {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(String(format: "#%03d", pokemon.id))
                         .font(.footnote)
                         .bold()
                         .foregroundColor(.pokemonIdBlack)
-                        
+                        .shadow(color:.white, radius:10)
+                    
                     
                     Text(pokemon.name.capitalized)
                         .font(.title)
@@ -55,18 +57,10 @@ struct PokemonRow: View {
                         }
                     }
                 }
-                .padding(20)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 10)
                 Spacer()
-                AsyncImage(url: pokemon.sprites.primary) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                } placeholder: {
-                    ProgressView()
-                }
-                .frame(width: 120, height: 120)
-                .cornerRadius(20)
-                .padding(.trailing, 10)
+                
             }
             .background(
                 ZStack {
@@ -84,6 +78,21 @@ struct PokemonRow: View {
                 }
             )
             .cornerRadius(10)
+            
+            
+            AsyncImage(url: pokemon.sprites.primary) { image in
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+            } placeholder: {
+                ProgressView()
+            }
+            .frame(width: 120, height: 120)
+            .cornerRadius(20)
+            .padding(.leading, 200)
+            .padding(.bottom, 30)
+        
+        }
     }
 }
 
