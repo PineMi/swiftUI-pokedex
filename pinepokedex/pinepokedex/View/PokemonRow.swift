@@ -7,17 +7,26 @@
 
 import SwiftUI
 
+
+
+func getGradient(pokemon: Pokemon) -> LinearGradient {
+    let Gradcolor1: Color = typeColor(pokemon_type: pokemon.types[0])
+    let Gradcolor2: Color = pokemon.types.count == 1 ? Gradcolor1.opacity(0.5) : typeColor(pokemon_type: pokemon.types[1])
+    return LinearGradient(colors: [Gradcolor1, Gradcolor1, Gradcolor2], startPoint: .leading, endPoint: .trailing)
+}
+
 struct TypeTagView: View {
     let typeName: String
     var body: some View {
         Text(typeName.capitalized)
             .font(.caption)
             .fontWeight(.bold)
-            .foregroundColor(.white)
+            .foregroundColor(.pokemonNameWhite)
             .padding(.horizontal, 12)
             .padding(.vertical, 6)
             .background(Color(typeColor(pokemon_type: typeName)))
-            .cornerRadius(20)
+            .cornerRadius(5)
+            .shadow(radius: 5, y: 6)
     }
 }
 
@@ -27,16 +36,18 @@ struct PokemonRow: View {
     
     
     var body: some View {
-            HStack(spacing: 20) {
-                VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
                     Text(String(format: "#%03d", pokemon.id))
-                        .font(.headline)
-                        .foregroundColor(.secondary)
+                        .font(.footnote)
+                        .bold()
+                        .foregroundColor(.pokemonIdBlack)
+                        
                     
                     Text(pokemon.name.capitalized)
                         .font(.title)
                         .fontWeight(.bold)
-                        .foregroundColor(.primary)
+                        .foregroundColor(.pokemonNameWhite)
                     
                     HStack {
                         ForEach(pokemon.types, id: \.self) { typeName in
@@ -46,10 +57,6 @@ struct PokemonRow: View {
                 }
                 .padding(20)
                 Spacer()
-                
-                let Gradcolor1 = typeColor(pokemon_type: pokemon.types[0])
-                let Gradcolor2 = pokemon.types.count == 1 ? .white : typeColor(pokemon_type: pokemon.types[1])
-               
                 AsyncImage(url: pokemon.sprites.primary) { image in
                     image
                         .resizable()
@@ -58,23 +65,28 @@ struct PokemonRow: View {
                     ProgressView()
                 }
                 .frame(width: 120, height: 120)
-                .background(LinearGradient(colors: [Gradcolor1, Gradcolor2], startPoint: .topTrailing, endPoint: .bottomLeading))
                 .cornerRadius(20)
                 .padding(.trailing, 10)
             }
             .background(
-                          Color(.systemGray6),
-                          in: UnevenRoundedRectangle(
-                              topLeadingRadius: 0,
-                              bottomLeadingRadius: 0,
-                              bottomTrailingRadius: 20,
-                              topTrailingRadius: 20
-                          )
-                      )
+                ZStack {
+                    getGradient(pokemon: pokemon).opacity(0.9).brightness(-0.1)
+                    
+                    Image(.thickToThinDotsPattern)
+                        .resizable()
+                        .opacity(0.4)
+                        .scaledToFit()
+                        .colorInvert()
+                        .rotationEffect(.degrees(-90))
+                        .frame(width: 150, height: 200)
+                        .padding(.leading, -180)
+                    
+                }
+            )
+            .cornerRadius(10)
     }
 }
 
 #Preview("Single Row") {
-    PokemonRow(pokemon: MockData.samplePokemon)
-        .padding()
+    PokemonRow(pokemon: MockData.pokemonList[1])
 }

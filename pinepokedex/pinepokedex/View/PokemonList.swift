@@ -46,33 +46,37 @@ struct PokemonList: View {
                         }
                         .tint(.yellow)
                     }
-                    .padding(.trailing, 20)
+                    .padding(10)
                     .listRowInsets(EdgeInsets())
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.clear)
             }
-            .listRowSpacing(8)
-            .ignoresSafeArea(.all, edges: .leading)
             .overlay {
                 if pokemons.isEmpty {
                     ProgressView()
                 }
             }
             .listStyle(.plain)
-            .searchable(text: $searchText, prompt: "Search for a Pokémon or ID")
+            .searchable(text: $searchText, prompt: "Search for a Pokémon or ID").tint(.white)
             .task {
                 if pokemons.isEmpty {
                     do {
-                        pokemons = try await service.fetchPokemonList(limit: 151)
+                        pokemons = try await service.fetchPokemonList(limit: 50)
                     } catch {
                         print("Error fetching Pokémon: \(error)")
                     }
                 }
             }
+            .background(
+                Rectangle()
+                    .edgesIgnoringSafeArea(.all)
+                    .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+                    .foregroundStyle(LinearGradient(colors: [.backgroundGray , .white], startPoint: .leading, endPoint: .topTrailing))
+            )
+            
         } detail: {
             Text("Select a Pokémon")
         }
-            
     }
 }
 
