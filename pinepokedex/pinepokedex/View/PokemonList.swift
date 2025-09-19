@@ -12,7 +12,12 @@ struct PokemonList: View {
     private let service = PokemonService()
     
     @State private var searchText = ""
-    
+        
+    // TODO
+    // Na tela de Detalhes do pokemon, recriar o design
+    // Criar a tela do smart filter conforme protótipo
+    // Adicionar o sorting e filtering
+    // Design para a search Bar
 
     
     var filteredPokemons: [Pokemon] {
@@ -33,36 +38,41 @@ struct PokemonList: View {
     
     var body: some View {
         NavigationSplitView {
-            List(filteredPokemons) { pokemon in
-                PokemonRow(pokemon: pokemon)
-                    .background(
-                        NavigationLink(destination: PokemonDetails(pokemon: pokemon)){}
-                            .opacity(0)
-                    )
-                
-                    
-                    .padding(10)
-                    .listRowInsets(EdgeInsets())
-                    .listRowSeparator(.hidden)
-                    .listRowBackground(Color.clear)
-            }
-            .overlay {
-                if pokemons.isEmpty {
-                    ProgressView()
-                }
-            }
-            .listStyle(.plain)
-            .searchable(text: $searchText, prompt: "Search for a Pokémon or ID").tint(.white)
-            .task {
-                if pokemons.isEmpty {
-                    do {
-                        pokemons = try await service.fetchPokemonList(limit: 300)
-                    } catch {
-                        print("Error fetching Pokémon: \(error)")
+            ZStack {
+                Background()
+                VStack {
+                    //SearchBarView()
+                    List(filteredPokemons) { pokemon in
+                        PokemonRow(pokemon: pokemon)
+                            .background(
+                                NavigationLink(destination: PokemonDetails(pokemon: pokemon)){}
+                                    .opacity(0)
+                            )
+                        
+                        
+                            .padding(10)
+                            .listRowInsets(EdgeInsets())
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.clear)
+                    }
+                    .overlay {
+                        if pokemons.isEmpty {
+                            ProgressView()
+                        }
+                    }
+                    .listStyle(.plain)
+                    .task {
+                        if pokemons.isEmpty {
+                            do {
+                                pokemons = try await service.fetchPokemonList(limit: 1302)
+                            } catch {
+                                print("Error fetching Pokémon: \(error)")
+                            }
+                        }
                     }
                 }
+                .offset(y: 40)
             }
-            .background(Background())
         } detail: {
             Text("Select a Pokémon")
         }

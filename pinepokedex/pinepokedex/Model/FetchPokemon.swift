@@ -2,7 +2,7 @@ import Foundation
 
 struct PokemonService {
     func fetchPokemon(id: Int) async throws -> Pokemon {
-        guard let url = URL(string: "https://pokeapi.co/api/v2/pokemon/\(id)/") else {
+        guard let url = URL(string: "https://pokeapi.co/api/v2/pokemon/\(id <= 1025 ? id : id + 8975)/") else {
             throw URLError(.badURL)
         }
         
