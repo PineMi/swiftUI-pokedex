@@ -38,14 +38,7 @@ struct PokemonList: View {
                             .opacity(0)
                     )
                 
-                    .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                        Button {
-                            print("\(pokemon.name) favorited!")
-                        } label: {
-                            Label("Favorite", systemImage: "star.fill")
-                        }
-                        .tint(.yellow)
-                    }
+                    
                     .padding(10)
                     .listRowInsets(EdgeInsets())
                     .listRowSeparator(.hidden)

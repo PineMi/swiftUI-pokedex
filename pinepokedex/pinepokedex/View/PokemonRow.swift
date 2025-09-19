@@ -64,7 +64,10 @@ struct PokemonRow: View {
             }
             .background(
                 ZStack {
-                    getGradient(pokemon: pokemon).opacity(0.9).brightness(-0.1)
+                    getGradient(pokemon: pokemon)
+                        .opacity(0.9)
+                        .brightness(-0.1)
+                        .frame(height: 120)
                     
                     Image(.thickToThinDotsPattern)
                         .resizable()
@@ -75,7 +78,7 @@ struct PokemonRow: View {
                         .frame(width: 150, height: 200)
                         .padding(.leading, -180)
                     
-                }
+                }.frame(height:120)
             )
             .cornerRadius(10)
             
@@ -90,7 +93,7 @@ struct PokemonRow: View {
             .frame(width: 120, height: 120)
             .cornerRadius(20)
             .padding(.leading, 200)
-            .padding(.bottom, 30)
+            .offset(y:-10)
         
         }
     }
