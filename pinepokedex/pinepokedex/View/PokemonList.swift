@@ -13,6 +13,8 @@ struct PokemonList: View {
     
     @State private var searchText = ""
     
+
+    
     var filteredPokemons: [Pokemon] {
             if searchText.isEmpty {
                 return pokemons
@@ -60,13 +62,7 @@ struct PokemonList: View {
                     }
                 }
             }
-            .background(
-                Rectangle()
-                    .edgesIgnoringSafeArea(.all)
-                    .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-                    .foregroundStyle(LinearGradient(colors: [.backgroundGray , .white], startPoint: .leading, endPoint: .topTrailing))
-            )
-            
+            .background(Background())
         } detail: {
             Text("Select a Pokémon")
         }
