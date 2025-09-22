@@ -29,7 +29,11 @@ struct SearchBarView: View {
                             .foregroundStyle(.gray)
                             .frame(height: 40)
                         
-                        Text("TEST")
+                        HStack {
+                            Text("TEST").padding(.horizontal, 10)
+                            Spacer()
+                        }
+                        
                     }
                     .padding(.horizontal, 20)
                     .padding(.bottom, 20)
