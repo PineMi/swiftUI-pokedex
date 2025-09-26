@@ -6,72 +6,73 @@
 //
 
 import SwiftUI
- 
+
 struct PokemonList: View {
+    
     @State private var pokemons: [Pokemon] = []
+    @State private var searchText = ""
     private let service = PokemonService()
     
-    @State private var searchText = ""
-        
-    // TODO
-    // Na tela de Detalhes do pokemon, recriar o design
-    // Criar a tela do smart filter conforme protótipo
-    // Adicionar o sorting e filtering
-    // Design para a search Bar
 
-    
     var filteredPokemons: [Pokemon] {
-            if searchText.isEmpty {
-                return pokemons
-            } else {
-                return pokemons.filter {
-                    let nameMatch = $0.name.lowercased().contains(searchText.lowercased())
-                    let idContainsMatch = String($0.id).contains(searchText)
-                    let idExactMatch = String(format: "%03d", $0.id) == searchText
-                    let typeMatch = $0.types.contains { type in
-                        type.lowercased().contains(searchText.lowercased())
-                    }
-                    return nameMatch || idContainsMatch || idExactMatch || typeMatch
+        if searchText.isEmpty {
+            return pokemons
+        } else {
+            let searchTextLowercased = searchText.lowercased()
+            return pokemons.filter { pokemon in
+                let nameMatches = pokemon.name.lowercased().contains(searchTextLowercased)
+                
+                let idContainsMatch = String(pokemon.id).contains(searchText)
+                
+                let idExactMatch = String(format: "%03d", pokemon.id) == searchText
+                
+                let typeMatches = pokemon.types.contains { type in
+                    type.lowercased().contains(searchTextLowercased)
+                }
+                return nameMatches || idContainsMatch || idExactMatch || typeMatches
             }
         }
     }
+    
     
     var body: some View {
         NavigationSplitView {
             ZStack {
                 Background()
-                VStack {
-                    //SearchBarView()
+                VStack(spacing: 0) {
+
+                    SearchBarView(text: $searchText).ignoresSafeArea()
+                    
                     List(filteredPokemons) { pokemon in
                         PokemonRow(pokemon: pokemon)
                             .background(
                                 NavigationLink(destination: PokemonDetails(pokemon: pokemon)){}
                                     .opacity(0)
                             )
-                        
-                        
-                            .padding(10)
+                            .padding(.horizontal, 10)
                             .listRowInsets(EdgeInsets())
                             .listRowSeparator(.hidden)
                             .listRowBackground(Color.clear)
                     }
+                    .listStyle(.plain)
                     .overlay {
                         if pokemons.isEmpty {
-                            ProgressView()
-                        }
-                    }
-                    .listStyle(.plain)
-                    .task {
-                        if pokemons.isEmpty {
-                            do {
-                                pokemons = try await service.fetchPokemonList(limit: 1302)
-                            } catch {
-                                print("Error fetching Pokémon: \(error)")
-                            }
+                            ProgressView("Catching Pokémon...")
+                        } else if filteredPokemons.isEmpty {
+                            ContentUnavailableView.search
                         }
                     }
                 }
-                .offset(y: 40)
+            }
+            .navigationBarHidden(true)
+            .task {
+                if pokemons.isEmpty {
+                    do {
+                        pokemons = try await service.fetchPokemonList(limit: 1302)
+                    } catch {
+                        print("Error fetching Pokémon: \(error)")
+                    }
+                }
             }
         } detail: {
             Text("Select a Pokémon")

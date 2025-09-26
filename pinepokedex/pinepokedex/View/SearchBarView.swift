@@ -8,43 +8,34 @@
 import SwiftUI
 
 struct SearchBarView: View {
+    @Binding var text: String
+
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius:20)
-                .foregroundColor(.blue)
-                
+                .foregroundColor(Color(.systemGray5))
+            
             VStack {
                 Spacer()
-                VStack {
+                VStack(spacing: 15) {
                     HStack {
-                        Text("Pokedex")
+                        Text("Pokédex")
                             .font(.system(size: 32, weight: .bold, design: .default))
-                            .foregroundColor(.black)
+                            .foregroundColor(.primary)
                             .padding(.leading, 20)
                         Spacer()
                     }
-                    
-                    ZStack {
-                        RoundedRectangle(cornerRadius:20)
-                            .foregroundStyle(.gray)
-                            .frame(height: 40)
-                        
-                        HStack {
-                            Text("TEST").padding(.horizontal, 10)
-                            Spacer()
-                        }
-                        
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, 20)
+
+                    TextField("Search for a Pokémon or ID", text: $text)
+                        .textFieldStyle(.roundedBorder)
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 15)
                 }
             }
-        }.frame(width: .infinity, height: 250)
+        }.frame(height: 180)
     }
 }
 
-
-
 #Preview {
-    SearchBarView()
+    SearchBarView(text: .constant(""))
 }

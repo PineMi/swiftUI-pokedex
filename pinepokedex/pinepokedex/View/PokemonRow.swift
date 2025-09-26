@@ -92,7 +92,7 @@ struct PokemonRow: View {
             }
             .frame(width: 120, height: 120)
             .cornerRadius(20)
-            .padding(.leading, 200)
+            .padding(.leading, 250)
             .offset(y:-10)
         
         }
